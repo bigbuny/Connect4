@@ -1,4 +1,4 @@
-class Connect:
+class Connect4:
     # getStruct {{{ 
     def getStruct(self, x, y):
 
@@ -33,34 +33,67 @@ class Connect:
 
 # Draw {{{ 
     def Draw(self, x, y, struct):
-        #numbers
-        for i in range(x):
-            print(i+1, end='    ')
-        print()
-        for j in range(y):
+        for i in range(x):                                  #
+            print(i+1, end='    ')                          # Numbers
+        print()                                             #
 
-        #first line
-            print('+',end='')
-            for i in range(x):
-                print('----', end='+')
-            print()
+        for j in range(y):                                  #
+            print('+',end='')                               #
+            for i in range(x):                              # First 
+                print('----', end='+')                      #       Line
+            print()                                         # 
 
-        #content after lines
-            for i in range(x):
+            for i in range(x):                              # From now on 
+                if struct[j][i] != ' ':                     #   j => local y
+                    print('|', end=' '+struct[j][i]+'  ')   #   i => local x
+                elif struct[j][i] == ' ':                   #
+                    print('|', end='    ')                  #
+            print('|', end='')                              #
+            print()                                         #
 
-        #from now on j is y and i is x
-                if struct[j][i] != ' ':
-                    print('|', end=' '+struct[j][i]+'  ')
-                elif struct[j][i] == ' ':
-                    print('|', end='    ')
-            print('|', end='')
-            print()
-        #last_line
-        print('+',end='')
-        for i in range(x):
-            print('----', end='+')
-        print()
+        print('+',end='')                                   # Last 
+        for i in range(x):                                  #     Line
+            print('----', end='+')                          #        
+        print()                                             #
 #}}}
+
+# check_winner {{{
+    def check_winner(self, struct, playeri):
+    #for horizontal, any adjacent four.
+        for i in range(len(struct)):
+            bool_ = False
+            L = struct[i]
+            # take all elements into consecutive group of 4.
+            for j in range(len(L)):
+                L_i = L[j:4+j]
+                if set(L_i) == {playeri}:
+                    bool_ = True
+                    return True
+                    break
+                if 4+j == len(L): break
+            if bool_:
+                break
+        count = 0
+    #for vertical checking
+        while count != self.x-1:
+            bool_ = False
+            L = []
+            for i in range(len(struct)):
+                L.append(struct[i][count])
+            for j in range(len(L)):
+                L_i = L[j:4+j]
+                if set(L_i) == {playeri}:
+                    bool_ = True
+                    return True
+                    break
+                if 4+j == len(L): break
+            if bool_:
+                break
+            count += 1
+    # diagnol
+        
+        #    
+# }}}
 
 # Main {{{ 
     def Main(self):
@@ -91,7 +124,12 @@ class Connect:
                 i = 1
             info = [playeri, k]
             struct=self.Addfoo(info, struct) 
+            winner=self.check_winner(struct, playeri)
+            print(winner)
             self.Draw(x, y, struct)
+            if winner:
+                print(f" player {playeri} is the winner")
+                break
 
 
 
@@ -100,6 +138,5 @@ class Connect:
         
 # }}} 
 
-connect = Connect()
+connect = Connect4()
 connect.Main()
-
